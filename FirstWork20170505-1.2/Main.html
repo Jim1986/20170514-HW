@@ -1,0 +1,323 @@
+<!DOCTYPE HTML>
+<html style=height:"580px">
+<head>
+    <meta charset="UTF-8"/>
+    <link href="css/bootstrap.min.css" rel="stylesheet"/>
+    <script type="text/javascript" src="js/jquery.js"></script>
+</head>
+<body style=background-color:#dfd>
+    
+    <audio id="door">
+        <source src="music/door.WAV" type="audio/WAV">
+    </audio>
+    <audio id="darling">
+        <source src="music/McDarling.mp3" type="audio/mp3">
+    </audio>
+    
+    <canvas id="board" width="580" height="580" 
+            style="border: 1px solid #000000">
+    </canvas>
+    <img id="pic1" class="pic" src="images/F-Big.png" Style="display: none"/>
+    <img id="pic2" class="pic" src="images/F-Egg.png" Style="display: none"/>
+    <img id="pic3" class="pic" src="images/F-Fish.png" Style="display: none"/>
+    <img id="pic4" class="pic" src="images/F-Hotcakes.png" Style="display: none"/>
+    <img id="pic5" class="pic" src="images/F-Nuggets.png" Style="display: none"/>
+    <img id="pic6" class="pic" src="images/S-Fries.png" Style="display: none"/>
+    <img id="pic7" class="pic" src="images/S-HashBrowns.png" Style="display: none"/>
+    <img id="pic8" class="pic" src="images/S-Pie.png" Style="display: none"/>
+    <img id="pic9" class="pic" src="images/S-Salad.png" Style="display: none"/>
+    <img id="pic10" class="pic" src="images/S-Wing.png" Style="display: none"/>
+    <img id="pic11" class="pic" src="images/T-Coffee.png" Style="display: none"/>
+    <img id="pic12" class="pic" src="images/T-Coke.png" Style="display: none"/>
+    <img id="pic13" class="pic" src="images/T-Corn.png" Style="display: none"/>
+    <img id="pic14" class="pic" src="images/T-Cream.png" Style="display: none"/>
+    <img id="pic15" class="pic" src="images/T-Sundae.png" Style="display: none"/>
+    <img id="BG2" src="images/BG.jpg" Style="display: none"/>
+    
+<script>
+
+    var objs = new Array;
+    objs[0] = document.getElementById("pic1");
+    objs[1] = document.getElementById("pic2");
+    objs[2] = document.getElementById("pic3");
+    objs[3] = document.getElementById("pic4");
+    objs[4] = document.getElementById("pic5");
+    objs[5] = document.getElementById("pic6");
+    objs[6] = document.getElementById("pic7");
+    objs[7] = document.getElementById("pic8");
+    objs[8] = document.getElementById("pic9");
+    objs[9] = document.getElementById("pic10");
+    objs[10] = document.getElementById("pic11");
+    objs[11] = document.getElementById("pic12");
+    objs[12] = document.getElementById("pic13");
+    objs[13] = document.getElementById("pic14");
+    objs[14] = document.getElementById("pic15");
+    
+    var board = document.getElementById("board");
+    var ctx = board.getContext("2d");
+    var img = document.getElementById("BG2");
+
+    var objWidth = 145;
+    var objPerCol = 5;
+    var objHeight = board.height / objPerCol;
+    
+    var randomObjsL = new Array;
+    var randomObjsR = new Array;
+    
+    window.onload = function() {
+    restart();
+    function restart() {
+        ctx.drawImage( img, 145, 0);
+        
+        for (var r = 0; r <= 4; r++) {
+            var e = 0;
+            do {
+                e = Math.floor(Math.random() * 15) ;
+                var exist = false;
+                if (randomObjsL.indexOf(e) != -1) exist = true ;
+            } while (exist);
+            randomObjsL[r] = e;
+        }       ////    左方隨機物件
+        
+        for (var r = 0; r <= 4; r++) {
+            var e = 0;
+            do {
+                e = Math.floor(Math.random() * 5) ;
+                var exist = false;
+                if (randomObjsR.indexOf(e) != -1) exist = true ;
+            } while (exist);
+            randomObjsR[r] = e;
+        }       ////    右方隨機物件
+    
+        createObj();
+        function createObj() {
+            for (var i = 0; i <= 3; i += 3) {
+                for (var j = 0; j <= 4; j++) {
+                    drawObj( i, j);
+                }
+            }
+        }       ////    規畫物件位置
+        
+        function drawObj( x, y) {
+            ctx.fillStyle = "#FFEEEE";
+            ctx.fillRect( x * objWidth + 1, y * objHeight + 1, 
+            objWidth - 2, objHeight - 2);
+    
+            ctx.strokeStyle = "#FFEE55";
+            ctx.lineWidth = 2;
+            ctx.strokeRect( x * objWidth + 1, y * objHeight + 1, 
+            objWidth- 2, objHeight- 2);
+            
+            if ( x == 0)
+            {ctx.drawImage( objs[randomObjsL[y]], x * objWidth, y * objHeight);}
+            else if ( x == 3)
+            {ctx.drawImage( objs[randomObjsL[randomObjsR[y]]], x * objWidth, y * objHeight);}
+        }       ////    繪圖方法
+    }
+
+    var LValue = "";
+    var RValue = "";
+    $(function () {
+        $(".b01").click(function () {
+            clearLeftDe(); $(this).addClass("decorate1"); LValue = 0; judge();})
+        $(".b02").click(function () {
+            clearLeftDe(); $(this).addClass("decorate1"); LValue = 1; judge();})
+        $(".b03").click(function () {
+            clearLeftDe(); $(this).addClass("decorate1"); LValue = 2; judge();})
+        $(".b04").click(function () {
+            clearLeftDe(); $(this).addClass("decorate1"); LValue = 3; judge();})
+        $(".b05").click(function () {
+            clearLeftDe(); $(this).addClass("decorate1"); LValue = 4; judge();})
+        $(".b31").click(function () {
+            clearRightDe(); $(this).addClass("decorate2"); RValue = 0; judge();})
+        $(".b32").click(function () {
+            clearRightDe(); $(this).addClass("decorate2"); RValue = 1; judge();})
+        $(".b33").click(function () {
+            clearRightDe(); $(this).addClass("decorate2"); RValue = 2; judge();})
+        $(".b34").click(function () {
+            clearRightDe(); $(this).addClass("decorate2"); RValue = 3; judge();})
+        $(".b35").click(function () {
+            clearRightDe(); $(this).addClass("decorate2"); RValue = 4; judge();})
+        $(".bStart").mousedown(function() {
+            $(this).removeClass("bStart"); $(this).addClass("bStart2");})
+        $(".bStart").mouseup(function() {
+            $(this).removeClass("bStart2"); $(this).addClass("bStart");})  
+        $(".bStart").click(function () { 
+            document.getElementById("gameOver").style.top = "-600px"; 
+            win=[0,0,0,0,0,0,0,0,0,0]; RValue = 5; LValue = 6;
+            ctx.clearRect( 145, 0, 290, 580); clearAll(); clearLeftDe(); clearRightDe();
+            randomObjsL = ["","","","",""]; randomObjsR = ["","","","",""]; restart();
+        });
+          
+    });
+    
+    function clearLeftDe() {
+        $(".b01").removeClass("decorate1");
+        $(".b02").removeClass("decorate1");
+        $(".b03").removeClass("decorate1");
+        $(".b04").removeClass("decorate1");
+        $(".b05").removeClass("decorate1");
+    }
+    
+    function clearRightDe() {
+        $(".b31").removeClass("decorate2");
+        $(".b32").removeClass("decorate2");
+        $(".b33").removeClass("decorate2");
+        $(".b34").removeClass("decorate2");
+        $(".b35").removeClass("decorate2");
+    }
+    
+    function clearAll() {
+        $(".b01").removeClass("correct");
+        $(".b02").removeClass("correct");
+        $(".b03").removeClass("correct");
+        $(".b04").removeClass("correct");
+        $(".b05").removeClass("correct");
+        $(".b31").removeClass("correct");
+        $(".b32").removeClass("correct");
+        $(".b33").removeClass("correct");
+        $(".b34").removeClass("correct");
+        $(".b35").removeClass("correct");
+    }
+        
+    var door = document.getElementById("door");
+    var darling = document.getElementById("darling");
+    var win = new Array;
+    function judge() {
+        if ( randomObjsL[LValue] == randomObjsL[randomObjsR[RValue]]) {
+            ctx.beginPath();
+            ctx.strokeStyle = "#444";
+            ctx.lineWidth = 2;
+            ctx.moveTo( 146, LValue * 115 + 58);
+            ctx.lineTo( 434, RValue * 115 + 58);
+            ctx.stroke();
+            door.volume = 0.1;
+            door.load();
+            door.play();
+            if ( LValue == 0) { $(".b01").addClass("correct"); win[0]= 1};
+            if ( LValue == 1) { $(".b02").addClass("correct"); win[1]= 1};
+            if ( LValue == 2) { $(".b03").addClass("correct"); win[2]= 1};
+            if ( LValue == 3) { $(".b04").addClass("correct"); win[3]= 1};
+            if ( LValue == 4) { $(".b05").addClass("correct"); win[4]= 1};
+            if ( RValue == 0) { $(".b31").addClass("correct"); win[5]= 1};
+            if ( RValue == 1) { $(".b32").addClass("correct"); win[6]= 1};
+            if ( RValue == 2) { $(".b33").addClass("correct"); win[7]= 1};
+            if ( RValue == 3) { $(".b34").addClass("correct"); win[8]= 1};
+            if ( RValue == 4) { $(".b35").addClass("correct"); win[9]= 1};
+            var w = 0;
+            for ( k=0; k<=9; k++) { w += win[k]};
+            if ( w == 10) { document.getElementById("gameOver").style.top = "110px"; 
+            door.volume = 0; darling.play();
+            }
+        }
+    }
+    }
+</script>
+    <style>
+        .b01 {top:1px; left:1px}
+        .b02 {top:117px; left:1px}
+        .b03 {top:233px; left:1px}
+        .b04 {top:349px; left:1px}
+        .b05 {top:465px; left:1px}
+        .b31 {top:1px; left:436px}
+        .b32 {top:117px; left:436px}
+        .b33 {top:233px; left:436px}
+        .b34 {top:349px; left:436px}
+        .b35 {top:465px; left:436px}
+        .btns {position: absolute; cursor: pointer;
+            height: 116px; width: 145px}
+        
+        .decorate1 {
+            border: 3px solid black;
+            background-image: url("images/Point.png");
+            background-size: 40px;
+            background-repeat: no-repeat;
+            background-position: right 0px;
+        }
+        .decorate2 {
+            border: 3px solid black;
+            background-image: url("images/Point.png");
+            background-size: 40px;
+            background-repeat: no-repeat;
+            background-position: right 0px;
+            transform:  scaleX(-1);
+        }
+            
+        .correct {
+            border: 58px solid black;
+            opacity: 0.3;
+            animation: change 1.5s;
+        }
+        @keyframes change {
+            0% { border: 3px solid black; opacity: 1; background-size: 60px;}
+            35% { border: 5px solid #FFFF55; background-size: 40px;}
+            100% { border: 58px solid black; opacity: 0.3; background-size: 5px;}
+        } 
+        
+        .startMc {
+            position: absolute;
+            top: -600px;
+            left: 161px;
+            height: 260px;
+            width: 260px;
+            border: 2px solid #ccc;
+            border-radius: 140px;
+            box-shadow: 0px 2px 5px 0px  #333;
+            background-image: linear-gradient( 180deg, #F00 0%, #FFF 100%);
+            transition: 1.5s linear;
+        }
+        .Mc {
+            position: absolute;
+            left: 45px;
+            top: 20px;
+        }
+        .bStart {
+            position: absolute;
+            border: 2px solid #ccc;
+            border-radius: 20px;
+            box-shadow: 0px 2px 5px 0px  #333;
+            height: 28px;
+            width: 80px;
+            left: 90px;
+            top: 205px;
+            cursor: pointer;
+        }
+        .bStart2 {
+            /*background-color: rgba(255,255,0,0.2);*/
+            position: absolute;
+            border: 2px solid #ccc;
+            border-radius: 20px;
+            box-shadow: 0px 0px 5px 0px  #333;
+            height: 28px;
+            width: 80px;
+            left: 90px;
+            top: 206px;
+            cursor: pointer;
+        }
+
+    </style>
+    <div id="b01" class="b01 btns"></div>
+    <div id="b02" class="b02 btns"></div>
+    <div id="b03" class="b03 btns"></div>
+    <div id="b04" class="b04 btns"></div>
+    <div id="b05" class="b05 btns"></div>
+    <div id="b31" class="b31 btns"></div>
+    <div id="b32" class="b32 btns"></div>
+    <div id="b33" class="b33 btns"></div>
+    <div id="b34" class="b34 btns"></div>
+    <div id="b35" class="b35 btns"></div>
+    <div id="gameOver" class="startMc">
+        <img class="Mc" src="images/Mc.png"/>
+        <div id="bStart" name="bStart" class="bStart">
+            <p align="center" style="font-size:120%">
+                <strong>restart</strong>
+            </p>
+        </div>
+    </div>
+    
+</body>
+</html>
+    </div>
+    
+</body>
+</html>
